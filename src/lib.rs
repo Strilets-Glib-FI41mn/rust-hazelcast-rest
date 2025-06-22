@@ -40,16 +40,18 @@ use reqwest::blocking::Client;
 use reqwest::Error;
 
 /// Hazelcast rest api client struct.
-pub struct HazelcastRestClient {
-    ip_address: &'static str,
-    port: &'static str,
+pub struct HazelcastRestClient<'a>{
+    //ip_address: &'static str,
+    //port: &'static str,
+    ip_address: &'a str,
+    port: &'a str,
     http_client: Client,
 }
 
 #[allow(unused_must_use)]
-impl HazelcastRestClient {
+impl HazelcastRestClient<'_> {
     /// Creates a new client struct with given address and port
-    pub fn new(ip_address: &'static str, port: &'static str) -> HazelcastRestClient {
+    pub fn new<'a>(ip_address: &'a str, port: &'a str) -> HazelcastRestClient<'a> {
         HazelcastRestClient {
             ip_address: ip_address,
             port: port,
