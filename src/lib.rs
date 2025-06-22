@@ -40,21 +40,21 @@ use reqwest::blocking::Client;
 use reqwest::Error;
 
 /// Hazelcast rest api client struct.
-pub struct HazelcastRestClient<'a>{
+pub struct HazelcastRestClient{
     //ip_address: &'static str,
     //port: &'static str,
-    ip_address: &'a str,
-    port: &'a str,
+    ip_address: String,
+    port: String,
     http_client: Client,
 }
 
 #[allow(unused_must_use)]
-impl <'a>HazelcastRestClient<'a> {
+impl HazelcastRestClient {
     /// Creates a new client struct with given address and port
-    pub fn new(ip_address: &'a str, port: &'a str) -> HazelcastRestClient<'a> {
+    pub fn new(ip_address: &str, port: &str) -> HazelcastRestClient {
         HazelcastRestClient {
-            ip_address: ip_address,
-            port: port,
+            ip_address: ip_address.to_owned(),
+            port: port.to_owned(),
             http_client: Client::new(),
         }
     }
