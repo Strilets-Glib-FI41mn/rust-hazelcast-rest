@@ -49,9 +49,9 @@ pub struct HazelcastRestClient<'a>{
 }
 
 #[allow(unused_must_use)]
-impl HazelcastRestClient<'_> {
+impl <'a>HazelcastRestClient<'a> {
     /// Creates a new client struct with given address and port
-    pub fn new<'a>(ip_address: &'a str, port: &'a str) -> HazelcastRestClient<'a> {
+    pub fn new(ip_address: &'a str, port: &'a str) -> HazelcastRestClient<'a> {
         HazelcastRestClient {
             ip_address: ip_address,
             port: port,
