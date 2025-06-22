@@ -31,10 +31,13 @@
 //!
 //! ```
 
-extern crate hyper;
-use hyper::*;
+//extern crate hyper;
+extern crate reqwest;
+//use hyper::*;
 use std::io::Read;
 use std::result::Result as StdResult;
+use reqwest::blocking::Client;
+use reqwest::Error;
 
 /// Hazelcast rest api client struct.
 pub struct HazelcastRestClient {
@@ -63,7 +66,7 @@ impl HazelcastRestClient {
                                  self.ip_address,
                                  self.port,
                                  queue_name);
-        self.http_client.post(&url_string).body(&value.to_string()).send().and_then(|mut x| {
+        self.http_client.post(&url_string).body(value.to_string().clone()).send().and_then(|mut x| {
             let mut content = String::new();
             x.read_to_string(&mut content);
             StdResult::Ok(content)
@@ -113,7 +116,7 @@ impl HazelcastRestClient {
                                  self.port,
                                  map_name,
                                  key_name);
-        self.http_client.post(&url_string).body(&value.to_string()).send().and_then(|mut x| {
+        self.http_client.post(&url_string).body(value.to_string().clone()).send().and_then(|mut x| {
             let mut content = String::new();
             x.read_to_string(&mut content);
             StdResult::Ok(content)
