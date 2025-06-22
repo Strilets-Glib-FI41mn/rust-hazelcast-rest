@@ -51,10 +51,10 @@ pub struct HazelcastRestClient{
 #[allow(unused_must_use)]
 impl HazelcastRestClient {
     /// Creates a new client struct with given address and port
-    pub fn new(ip_address: &str, port: &str) -> HazelcastRestClient {
+    pub fn new(ip_address: impl Into<String>, port: impl Into<String>) -> HazelcastRestClient {
         HazelcastRestClient {
-            ip_address: ip_address.to_owned(),
-            port: port.to_owned(),
+            ip_address: ip_address.into(),
+            port: port.into(),
             http_client: Client::new(),
         }
     }
