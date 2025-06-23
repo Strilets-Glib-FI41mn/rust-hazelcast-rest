@@ -22,9 +22,9 @@
 //!
 //! use hazelcast_rest::HazelcastRestClient;
 //! let client = HazelcastRestClient::new("10.0.2.15", "5701");
-//! client.map_put::<String>("capital_map", "Turkey", "Ankara".to_owned());
-//! client.map_put::<String>("capital_map", "France", "Paris".to_owned());
-//! client.map_put::<String>("capital_map", "Turkey", "Istanbul".to_owned());
+//! client.map_put::<String, String>("capital_map", "Turkey", vec![], "Ankara".to_owned());
+//! client.map_put::<String, String>("capital_map", "France", vec![], "Paris".to_owned());
+//! client.map_put::<String, String>("capital_map", "Turkey", vec![], "Istanbul".to_owned());
 //! client.map_remove_all("capital_map");
 //! assert_eq!("Ankara", client.map_get("capital_map", "Turkey").unwrap());
 //! assert_eq!("Paris", client.map_get("capital_map", "France").unwrap());
@@ -107,9 +107,10 @@ impl HazelcastRestClient {
     }
 
     /// Puts key-value to the named map. Overwrites if given key is already in map.
-    pub fn map_put<T: ToString>(self: &Self,
+    pub fn map_put<T: ToString, T1: ToString>(self: &Self,
                                 map_name: &str,
                                 key_name: &str,
+                                header: &Vec<(T1, T1)>,
                                 value: T)
                                 -> std::result::Result<String, Error> {
 
@@ -118,7 +119,12 @@ impl HazelcastRestClient {
                                  self.port,
                                  map_name,
                                  key_name);
-        self.http_client.post(&url_string).body(value.to_string().clone()).send().and_then(|mut x| {
+        let mut bld = self.http_client.post(&url_string)
+        .body(value.to_string());
+        for (key, val) in header.iter(){
+            bld = bld.header(key.to_string(), val.to_string());
+        }
+        bld.send().and_then(|mut x| {
             let mut content = String::new();
             x.read_to_string(&mut content);
             StdResult::Ok(content)
